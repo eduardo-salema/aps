@@ -1,10 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visão geral | Focos de Incêndio</title>
+    <link rel="stylesheet" th:href="@{/Style.css}" href="/Style.css">
 </head>
 <body>
-<h1></h1>
+<div class="app-shell">
+    <aside class="sidebar">
+        <a class="brand" th:href="@{/}" href="/">
+            <span class="brand-mark">F</span>
+            <span class="brand-copy">
+                <strong>FogoData</strong><
+                small>Monitoramento & análise</small>
+                </span>
+        </a>
+        <div class="nav-label">MENU PRINCIPAL</div>
+        <nav class="navigation" aria-label="Navegação principal">
+            <a class="nav-link active" th:href="@{/}" href="/"><span class="nav-icon">▦</span> Visão geral</a>
+            <a class="nav-link" th:href="@{/dados}" href="/dados"><span class="nav-icon">▤</span> Dados carregados</a>
+            <a class="nav-link" th:href="@{/resultado}" href="/resultado"><span class="nav-icon">↗</span> Ordenação e resultados</a>
+        </nav>
+        <div class="sidebar-bottom">
+            <span class="status-dot"></span>
+            <div><strong>Projeto acadêmico</strong><small>APS · Ciência da Computação</small></div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div><p class="eyebrow">PAINEL DE ANÁLISE</p><h1>Visão geral</h1></div>
+            <div class="topbar-chip"><span class="status-dot"></span> Dados do Espírito Santo</div>
+        </header>
+
+        <section class="welcome-card">
+            <div class="welcome-copy">
+                <span class="pill pill-light">BASE DE DADOS · INPE</span>
+                <h2>Dados claros para<br>entender os focos de incêndio.</h2>
+                <p>Consulte os registros carregados dos arquivos CSV e acompanhe as próximas análises de ordenação.</p>
+                <a class="button button-light" th:href="@{/dados}" href="/dados">Explorar dados <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="welcome-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="glow"></div><span class="flame">♨</span><span class="art-caption">DADOS · ANÁLISE · RESULTADOS</span></div>
+        </section>
+
+        <div class="section-heading"><div><p class="eyebrow">RESUMO DA CARGA</p><h2>Indicadores dos arquivos</h2></div><span class="muted-note">Valores reais serão exibidos após a integração do controller.</span></div>
+        <section class="metric-grid" aria-label="Indicadores dos dados">
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-blue">▤</span><span class="metric-tag">REGISTROS</span></div><p class="metric-label">Focos válidos</p><p class="metric-value" th:text="${totalFocos != null ? totalFocos : '—'}">—</p><p class="metric-foot">Registros convertidos em dados</p></article>
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-green">✓</span><span class="metric-tag">LEITURA</span></div><p class="metric-label">Linhas lidas</p><p class="metric-value" th:text="${linhasLidas != null ? linhasLidas : '—'}">—</p><p class="metric-foot">Linhas de conteúdo analisadas</p></article>
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-orange">!</span><span class="metric-tag">VALIDAÇÃO</span></div><p class="metric-label">Linhas inválidas</p><p class="metric-value" th:text="${linhasInvalidas != null ? linhasInvalidas : '—'}">—</p><p class="metric-foot">Registros que não puderam ser usados</p></article>
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-purple">◷</span><span class="metric-tag">DESEMPENHO</span></div><p class="metric-label">Tempo de leitura</p><p class="metric-value"><span th:text="${tempoMs != null ? tempoMs : '—'}">—</span><small th:if="${tempoMs != null}"> ms</small></p><p class="metric-foot">Duração da carga dos CSVs</p></article>
+        </section>
+
+        <section class="content-grid">
+            <article class="panel panel-large">
+                <div class="panel-heading"><div><h3>Arquivos de origem</h3><p>Arquivos CSV disponíveis no projeto</p></div><span class="panel-icon">▧</span></div>
+                <div class="file-row"><span class="file-badge">CSV</span><div class="file-info"><strong>ES 2023.csv</strong><small>Focos de incêndio · Espírito Santo</small></div><span class="file-year">2023</span></div>
+                <div class="file-row"><span class="file-badge">CSV</span><div class="file-info"><strong>ES 2024.csv</strong><small>Focos de incêndio · Espírito Santo</small></div><span class="file-year">2024</span></div>
+                <p class="small-note">Os nomes acima correspondem aos arquivos presentes na pasta <code>dados/</code>.</p>
+            </article>
+            <article class="panel next-panel">
+                <div class="panel-heading"><div><h3>Próximas etapas</h3><p>Etapas previstas no trabalho</p></div></div>
+                <div class="timeline-item"><span class="timeline-number done">1</span><div><strong>Leitura dos CSVs</strong><small>Modelo e validação dos dados</small></div><span class="mini-status done-text">Base criada</span></div>
+                <div class="timeline-item"><span class="timeline-number">2</span><div><strong>Algoritmos de ordenação</strong><small>Comparações, escritas e trocas</small></div><span class="mini-status">Próxima etapa</span></div>
+                <div class="timeline-item"><span class="timeline-number">3</span><div><strong>Integração Spring Boot</strong><small>Controllers e serviços</small></div></div>
+                <div class="timeline-item"><span class="timeline-number">4</span><div><strong>Dashboard final</strong><small>Visualização dos resultados</small></div></div>
+            </article>
+        </section>
+        <footer class="footer">FogoData <span>·</span> APS de Estrutura de Dados <span>·</span> Interface em desenvolvimento</footer>
+    </main>
+</div>
 </body>
 </html>
