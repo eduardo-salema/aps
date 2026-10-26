@@ -1,6 +1,5 @@
 package com.unip.aps.ordenacao;
 
-import com.unip.aps.model.ComparadorFoco;
 import com.unip.aps.model.FocoIncendio;
 import com.unip.aps.model.ResultadoOrdenacao;
 
@@ -31,7 +30,7 @@ public class BubbleSort implements Ordenador{
 
                     FocoIncendio temporario = lista.get(j);
 
-                    lista.set(j, lista.get(j + i));
+                    lista.set(j, lista.get(j + 1));
                     lista.set(j + i, temporario);
 
                     substituicoes++;
