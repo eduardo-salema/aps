@@ -1,41 +1,55 @@
 package com.unip.aps.ordenacao;
 
-public class BubbleSort {
+import com.unip.aps.model.ComparadorFoco;
+import com.unip.aps.model.FocoIncendio;
+import com.unip.aps.model.ResultadoOrdenacao;
 
-    public static class Estatisticas{
-        public long comparacoes = 0;
-        public long escritas = 0;
-        public long trocas = 0;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
-        public long getTotalOperacoes(){
-            return comparacoes + escritas;
-        }
-    }
+public class BubbleSort implements Ordenador{
+    @Override
+    public ResultadoOrdenacao ordenar(List<FocoIncendio> dados, String criterio){
+        List<FocoIncendio> lista = new ArrayList<>(dados);
+        Comparator<FocoIncendio> comparador = ComparadorFoco.criar(criterio);
 
-    public void bubbleSort(int[] vetor, Estatisticas e){
-        int n = vetor.length;
+        long comparacoes = 0;
+        long substituicoes = 0;
 
-        for (int i = 0; i < n - 1; i++){
+        long inicio = System.nanoTime();
+
+        for (int i = 0; i < lista.size() - 1; i++){
             boolean trocou = false;
 
-            for (int j = 0; j < n -1 - i; j++){
-                e.comparacoes++;
+            for (int j = 0; j < lista.size() - 1 - i; j++){
+                comparacoes++;
 
-                if (vetor[j] > vetor[j + i]){
-                    int temp = vetor[j];
-                    vetor[j] = vetor[j + i];
-                    vetor[j + i] = temp;
+                if(comparador.compare(lista.get(j), lista.get(j + i)) > 0) {
 
-                    e.escritas += 2;
-                    e.trocas++;
+
+
+                    FocoIncendio temporario = lista.get(j);
+
+                    lista.set(j, lista.get(j + i));
+                    lista.set(j + i, temporario);
+
+                    substituicoes++;
                     trocou = true;
                 }
             }
+
             if (!trocou){
                 break;
             }
-
-
         }
+
+        long tempo = System.nanoTime() - inicio;
+
+        return new ResultadoOrdenacao(
+                comparacoes,
+                substituicoes,
+                tempo
+        );
     }
 }
