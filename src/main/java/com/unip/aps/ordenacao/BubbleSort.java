@@ -24,7 +24,7 @@ public class BubbleSort implements Ordenador{
             for (int j = 0; j < lista.size() - 1 - i; j++){
                 comparacoes++;
 
-                if(comparador.compare(lista.get(j), lista.get(j + i)) > 0) {
+                if(comparador.compare(lista.get(j), lista.get(j + 1)) > 0) {
 
 
 
