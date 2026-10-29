@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordenação e resultados | FogoData</title>
+    <link rel="stylesheet" th:href="@{/Style.css}" href="/Style.css">
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar">
+        <a class="brand" th:href="@{/}" href="/"><span class="brand-mark">F</span><span class="brand-copy"><strong>FogoData</strong><small>Monitoramento & análise</small></span></a>
+        <div class="nav-label">MENU PRINCIPAL</div>
+        <nav class="navigation" aria-label="Navegação principal">
+            <a class="nav-link" th:href="@{/}" href="/"><span class="nav-icon">▦</span> Visão geral</a>
+            <a class="nav-link" th:href="@{/dados}" href="/dados"><span class="nav-icon">▤</span> Dados carregados</a>
+            <a class="nav-link active" th:href="@{/resultados}" href="/resultados"><span class="nav-icon">↗</span> Ordenação e resultados</a>
+        </nav>
+        <div class="sidebar-bottom"><span class="status-dot"></span><div><strong>Projeto acadêmico</strong><small>APS · Ciência da Computação</small></div></div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar"><div><p class="eyebrow">ANÁLISE DE DESEMPENHO</p><h1>Ordenação e resultados</h1><p class="page-description">Compare os algoritmos quando o módulo de ordenação estiver integrado.</p></div><span class="topbar-chip"><span class="status-dot status-pending"></span> Aguardando integração</span></header>
+
+        <section class="welcome-card results-hero"><div class="welcome-copy"><span class="pill pill-light">ESTRUTURA PREPARADA</span><h2>Como os algoritmos<br>se comportam?</h2><p>Esta página foi preparada para receber as métricas calculadas pelo módulo de ordenação, sem inventar resultados antes da implementação.</p></div><div class="welcome-art chart-art" aria-hidden="true"><div class="bar bar-a"></div><div class="bar bar-b"></div><div class="bar bar-c"></div><div class="bar bar-d"></div><div class="bar bar-e"></div><span class="art-caption">COMPARAR · MEDIR · ENTENDER</span></div></section>
+
+        <section class="metric-grid">
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-blue">⇄</span><span class="metric-tag">ALGORITMO</span></div><p class="metric-label">Método selecionado</p><p class="metric-value metric-value-text" th:text="${algoritmoSelecionado != null ? algoritmoSelecionado : 'Não definido'}">Não definido</p><p class="metric-foot">Será informado pelo módulo de ordenação</p></article>
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-purple">≋</span><span class="metric-tag">OPERAÇÕES</span></div><p class="metric-label">Total de operações</p><p class="metric-value" th:text="${totalOperacoes != null ? totalOperacoes : '—'}">—</p><p class="metric-foot">Conforme a métrica definida no projeto</p></article>
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-green">◷</span><span class="metric-tag">TEMPO</span></div><p class="metric-label">Tempo de execução</p><p class="metric-value"><span th:text="${tempoExecucaoMs != null ? tempoExecucaoMs : '—'}">—</span><small th:if="${tempoExecucaoMs != null}"> ms</small></p><p class="metric-foot">Medido durante a ordenação</p></article>
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-orange">⇅</span><span class="metric-tag">DADOS</span></div><p class="metric-label">Registros ordenados</p><p class="metric-value" th:text="${totalOrdenado != null ? totalOrdenado : '—'}">—</p><p class="metric-foot">Quantidade de focos no teste</p></article>
+        </section>
+
+        <section class="content-grid results-grid">
+            <article class="panel panel-large"><div class="panel-heading"><div><h3>Comparativo de algoritmos</h3><p>Área reservada para os resultados reais</p></div><span class="panel-icon">▥</span></div>
+                <div class="chart-placeholder"><div class="chart-grid-lines"><span></span><span></span><span></span><span></span></div><div class="chart-empty"><span class="chart-empty-icon">▥</span><strong>Gráfico será exibido após a integração</strong><p>Os dados da Pessoa 2 alimentarão esta visualização.</p></div><div class="chart-labels"><span>Bubble</span><span>Selection</span><span>Insertion</span><span>Merge</span><span>Quick</span></div></div>
+                <p class="small-note">Os nomes representam os algoritmos previstos nos arquivos do projeto. Nenhuma comparação de desempenho foi preenchida artificialmente.</p>
+            </article>
+            <article class="panel"><div class="panel-heading"><div><h3>Métricas consideradas</h3><p>Indicadores para comparação</p></div><span class="panel-icon">◎</span></div>
+                <div class="metric-detail"><span class="detail-symbol icon-blue">↔</span><div><strong>Comparações</strong><p>Quantas vezes elementos são comparados.</p></div></div>
+                <div class="metric-detail"><span class="detail-symbol icon-purple">✎</span><div><strong>Escritas</strong><p>Quantas atribuições ou gravações são contabilizadas.</p></div></div>
+                <div class="metric-detail"><span class="detail-symbol icon-orange">⇄</span><div><strong>Trocas</strong><p>Quantas permutas acontecem durante a ordenação.</p></div></div>
+                <div class="metric-detail"><span class="detail-symbol icon-green">◷</span><div><strong>Tempo de execução</strong><p>Duração do processamento, em milissegundos.</p></div></div>
+            </article>
+        </section>
+        <section class="notice-card"><span class="notice-icon">i</span><div><strong>Importante para a integração</strong><p>Os nomes dos atributos usados nesta página são sugestões de contrato entre o Controller e o Thymeleaf. A Pessoa 3 deve alinhá-los com as classes e os métodos finais do módulo de ordenação.</p></div></section>
+        <footer class="footer">FogoData <span>·</span> APS de Estrutura de Dados <span>·</span> Interface em desenvolvimento</footer>
+    </main>
+</div>
+</body>
+</html>
