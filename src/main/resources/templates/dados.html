@@ -7,6 +7,45 @@
     <link rel="stylesheet" th:href="@{/Style.css}" href="/Style.css">
 </head>
 <body>
+<div class="app-shell">
+    <aside class="sidebar">
+        <a class="brand" th:href="@{/}" href="/"><span class="brand-mark">F</span><span class="brand-copy"><strong>FogoData</strong><small>Monitoramento & análise</small></span></a>
+        <div class="nav-label">MENU PRINCIPAL</div>
+        <nav class="navigation" aria-label="Navegação principal">
+            <a class="nav-link" th:href="@{/}" href="/"><span class="nav-icon">▦</span> Visão geral</a>
+            <a class="nav-link active" th:href="@{/dados}" href="/dados"><span class="nav-icon">▤</span> Dados carregados</a>
+            <a class="nav-link" th:href="@{/resultados}" href="/resultados"><span class="nav-icon">↗</span> Ordenação e resultados</a>
+        </nav>
+        <div class="sidebar-bottom"><span class="status-dot"></span><div><strong>Projeto acadêmico</strong><small>APS · Ciência da Computação</small></div></div>
+    </aside>
 
+    <main class="main-content">
+        <header class="topbar"><div><p class="eyebrow">EXPLORAÇÃO DA BASE</p><h1>Dados carregados</h1><p class="page-description">Consulte os registros importados dos arquivos CSV do Espírito Santo.</p></div><span class="topbar-chip"><span class="status-dot"></span> Fonte: arquivos CSV</span></header>
+
+        <section class="metric-grid metric-grid-three">
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-blue">▤</span><span class="metric-tag">BASE</span></div><p class="metric-label">Focos válidos</p><p class="metric-value" th:text="${totalFocos != null ? totalFocos : '—'}">—</p><p class="metric-foot">Objetos FocoIncendio carregados</p></article>
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-orange">!</span><span class="metric-tag">QUALIDADE</span></div><p class="metric-label">Linhas inválidas</p><p class="metric-value" th:text="${linhasInvalidas != null ? linhasInvalidas : '—'}">—</p><p class="metric-foot">Linhas ignoradas por erro de validação</p></article>
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-purple">▧</span><span class="metric-tag">ORIGEM</span></div><p class="metric-label">Arquivos processados</p><p class="metric-value" th:text="${arquivos != null ? #lists.size(arquivos) : '2'}">2</p><p class="metric-foot">ES 2023.csv e ES 2024.csv</p></article>
+        </section>
+
+        <section class="panel data-panel">
+            <div class="panel-heading panel-heading-wrap"><div><h3>Registros de focos de incêndio</h3><p>Campos disponíveis no modelo FocoIncendio</p></div><span class="result-count" th:if="${focos != null}" th:text="${#lists.size(focos)} + ' registros'">Registros</span><span class="result-count" th:unless="${focos != null}">Prévia da estrutura</span></div>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Data e hora</th><th>Município</th><th>Estado</th><th>Bioma</th><th>Latitude</th><th>Longitude</th><th>Satélite</th></tr></thead>
+                    <tbody>
+                    <tr th:each="foco, stat : ${focos}" th:if="${stat.index < 50}">
+                        <td th:text="${#temporals.format(foco.dataHora, 'dd/MM/yyyy HH:mm')}">03/01/2023 16:13</td><td th:text="${foco.municipio}">DOMINGOS MARTINS</td><td th:text="${foco.estado}">ESPÍRITO SANTO</td><td><span class="biome-pill" th:text="${foco.bioma}">Mata Atlântica</span></td><td th:text="${#numbers.formatDecimal(foco.latitude, 1, 4)}">-20.3760</td><td th:text="${#numbers.formatDecimal(foco.longitude, 1, 4)}">-40.6945</td><td th:text="${foco.satelite}">—</td>
+                    </tr>
+                    <tr th:if="${focos == null or #lists.isEmpty(focos)}"><td colspan="7" class="empty-state"><span class="empty-icon">▤</span><strong>Aguardando dados do Controller</strong><p>Esta tabela será preenchida quando o Controller enviar a lista de focos para a página.</p><small>Exemplo baseado no CSV: 03/01/2023 · Domingos Martins · Mata Atlântica</small></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-foot"><span>Exibindo até 50 registros para manter a página leve.</span><span>Os dados completos permanecem no backend.</span></div>
+        </section>
+        <section class="notice-card"><span class="notice-icon">i</span><div><strong>Sobre os dados</strong><p>O leitor atual exige data/hora, latitude, longitude, município e bioma. Campos como satélite, estado e país são tratados pelo modelo quando disponíveis no CSV.</p></div></section>
+        <footer class="footer">FogoData <span>·</span> APS de Estrutura de Dados <span>·</span> Interface em desenvolvimento</footer>
+    </main>
+</div>
 </body>
 </html>
