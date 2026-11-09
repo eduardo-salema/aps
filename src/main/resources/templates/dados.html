@@ -9,7 +9,7 @@
 <body>
 <div class="app-shell">
     <aside class="sidebar">
-        <a class="brand" th:href="@{/}" href="/"><span class="brand-mark">F</span><span class="brand-copy"><strong>FogoData</strong><small>Monitoramento & análise</small></span></a>
+        <a class="brand" th:href="@{/}" href="/"><span class="brand-mark">F</span><span class="brand-copy"><strong>FogoData</strong><small>Monitoramento &amp; análise</small></span></a>
         <div class="nav-label">MENU PRINCIPAL</div>
         <nav class="navigation" aria-label="Navegação principal">
             <a class="nav-link" th:href="@{/}" href="/"><span class="nav-icon">▦</span> Visão geral</a>
@@ -39,15 +39,22 @@
             <div class="table-scroll">
                 <table class="data-table">
                     <thead><tr><th>Data e hora</th><th>Município</th><th>Estado</th><th>Bioma</th><th>Latitude</th><th>Longitude</th><th>Satélite</th></tr></thead>
-                    <tbody>
-                    <tr class="foco-row" th:each="foco, stat : ${focos}" th:if="${stat.index < 100}" th:attr="data-municipio=${foco.municipio},data-ano=${foco.ano},data-bioma=${foco.bioma}">
-                        <td th:text="${#temporals.format(foco.dataHora, 'dd/MM/yyyy HH:mm')}">03/01/2023 16:13</td><td th:text="${foco.municipio}">DOMINGOS MARTINS</td><td th:text="${foco.estado}">ESPÍRITO SANTO</td><td><span class="biome-pill" th:text="${foco.bioma}">Mata Atlântica</span></td><td th:text="${#numbers.formatDecimal(foco.latitude, 1, 4)}">-20.3760</td><td th:text="${#numbers.formatDecimal(foco.longitude, 1, 4)}">-40.6945</td><td th:text="${foco.satelite}">—</td>
+                    <tbody id="tabelaFocos">
+                    <!-- Renderizamos todos os focos para que o filtro alcance 2023 e 2024. O JS mostra no máximo 100 linhas. -->
+                    <tr class="foco-row" th:each="foco : ${focos}" th:attr="data-municipio=${foco.municipio},data-ano=${foco.ano},data-bioma=${foco.bioma}" hidden>
+                        <td th:text="${#temporals.format(foco.dataHora, 'dd/MM/yyyy HH:mm')}">03/01/2023 16:13</td>
+                        <td th:text="${foco.municipio}">DOMINGOS MARTINS</td>
+                        <td th:text="${foco.estado}">ESPÍRITO SANTO</td>
+                        <td><span class="biome-pill" th:text="${foco.bioma}">Mata Atlântica</span></td>
+                        <td th:text="${#numbers.formatDecimal(foco.latitude, 1, 4)}">-20.3760</td>
+                        <td th:text="${#numbers.formatDecimal(foco.longitude, 1, 4)}">-40.6945</td>
+                        <td th:text="${foco.satelite}">—</td>
                     </tr>
-                    <tr th:if="${focos == null or #lists.isEmpty(focos)}"><td colspan="7" class="empty-state"><span class="empty-icon">▤</span><strong>Nenhum registro carregado</strong><p>Confira os arquivos CSV e recarregue os dados na visão geral.</p></td></tr>
+                    <tr id="semResultados" hidden><td colspan="7" class="empty-state"><span class="empty-icon">▤</span><strong>Nenhum registro encontrado</strong><p>Experimente ajustar ou limpar os filtros.</p></td></tr>
                     </tbody>
                 </table>
             </div>
-            <div class="table-foot"><span id="contagemVisivel" aria-live="polite">Exibindo até 100 registros.</span><span>Os filtros atuam sobre os primeiros 100 registros; a base completa permanece no backend.</span></div>
+            <div class="table-foot"><span id="contagemVisivel" aria-live="polite">Carregando prévia…</span><span>Exibimos até 100 registros após aplicar os filtros. A base original não é alterada.</span></div>
         </section>
         <section class="notice-card"><span class="notice-icon">i</span><div><strong>Sobre os dados</strong><p>Os filtros desta tela são locais e não alteram a base. Para análises ordenadas, use a página de resultados.</p></div></section>
         <footer class="footer">FogoData <span>·</span> APS de Estrutura de Dados <span>·</span> Painel integrado</footer>
@@ -58,23 +65,54 @@
         const busca = document.getElementById('buscaMunicipio');
         const ano = document.getElementById('filtroAno');
         const bioma = document.getElementById('filtroBioma');
-        const linhas = [...document.querySelectorAll('.foco-row')];
+        const linhas = Array.from(document.querySelectorAll('.foco-row'));
         const contagem = document.getElementById('contagemVisivel');
-        const normalizar = valor => (valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        const semResultados = document.getElementById('semResultados');
+        const LIMITE = 100;
+
+        const normalizar = valor => String(valor || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .trim()
+            .toLowerCase();
+
         function filtrar() {
-            let visiveis = 0;
+            const municipioBusca = normalizar(busca.value);
+            const anoSelecionado = String(ano.value);
+            const biomaSelecionado = normalizar(bioma.value);
+            let encontrados = 0;
+            let exibidos = 0;
+
             linhas.forEach(linha => {
-                const mostrar = normalizar(linha.dataset.municipio).includes(normalizar(busca.value))
-                    && (!ano.value || linha.dataset.ano === ano.value)
-                    && (!bioma.value || linha.dataset.bioma === bioma.value);
-                linha.hidden = !mostrar;
-                if (mostrar) visiveis++;
+                const corresponde = normalizar(linha.dataset.municipio).includes(municipioBusca)
+                    && (!anoSelecionado || linha.dataset.ano === anoSelecionado)
+                    && (!biomaSelecionado || normalizar(linha.dataset.bioma) === biomaSelecionado);
+
+                if (corresponde) {
+                    encontrados++;
+                    if (exibidos < LIMITE) {
+                        linha.hidden = false;
+                        exibidos++;
+                    } else {
+                        linha.hidden = true;
+                    }
+                } else {
+                    linha.hidden = true;
+                }
             });
-            contagem.textContent = `${visiveis} de ${linhas.length} registros da prévia visíveis.`;
+
+            semResultados.hidden = encontrados !== 0;
+            contagem.textContent = encontrados === 0
+                ? 'Nenhum registro corresponde aos filtros.'
+                : `Exibindo ${exibidos} de ${encontrados} registros encontrados.`;
         }
-        [busca, ano, bioma].forEach(el => el.addEventListener('input', filtrar));
+
+        [busca, ano, bioma].forEach(elemento => elemento.addEventListener('input', filtrar));
         document.getElementById('limparFiltros').addEventListener('click', () => {
-            busca.value = ''; ano.value = ''; bioma.value = ''; filtrar();
+            busca.value = '';
+            ano.value = '';
+            bioma.value = '';
+            filtrar();
         });
         filtrar();
     })();
