@@ -43,7 +43,7 @@
             <div class="welcome-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="glow"></div><span class="flame">♨</span><span class="art-caption">DADOS · ANÁLISE · RESULTADOS</span></div>
         </section>
 
-        <div class="section-heading"><div><p class="eyebrow">RESUMO DA CARGA</p><h2>Indicadores dos arquivos</h2></div><span class="muted-note">Valores reais serão exibidos após a integração do controller.</span></div>
+        <div class="section-heading"><div><p class="eyebrow">RESUMO DA CARGA</p><h2>Indicadores dos arquivos</h2></div><span class="muted-note">Indicadores calculados a partir dos arquivos carregados.</span></div>
         <section class="metric-grid" aria-label="Indicadores dos dados">
             <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-blue">▤</span><span class="metric-tag">REGISTROS</span></div><p class="metric-label">Focos válidos</p><p class="metric-value" th:text="${totalFocos != null ? totalFocos : '—'}">—</p><p class="metric-foot">Registros convertidos em dados</p></article>
             <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-green">✓</span><span class="metric-tag">LEITURA</span></div><p class="metric-label">Linhas lidas</p><p class="metric-value" th:text="${linhasLidas != null ? linhasLidas : '—'}">—</p><p class="metric-foot">Linhas de conteúdo analisadas</p></article>
@@ -54,19 +54,21 @@
         <section class="content-grid">
             <article class="panel panel-large">
                 <div class="panel-heading"><div><h3>Arquivos de origem</h3><p>Arquivos CSV disponíveis no projeto</p></div><span class="panel-icon">▧</span></div>
-                <div class="file-row"><span class="file-badge">CSV</span><div class="file-info"><strong>ES 2023.csv</strong><small>Focos de incêndio · Espírito Santo</small></div><span class="file-year">2023</span></div>
-                <div class="file-row"><span class="file-badge">CSV</span><div class="file-info"><strong>ES 2024.csv</strong><small>Focos de incêndio · Espírito Santo</small></div><span class="file-year">2024</span></div>
-                <p class="small-note">Os nomes acima correspondem aos arquivos presentes na pasta <code>dados/</code>.</p>
+                <div class="file-row" th:each="arquivo : ${arquivos}"><span class="file-badge">CSV</span><div class="file-info"><strong th:text="${arquivo}">Arquivo CSV</strong><small>Focos de incêndio · fonte carregada</small></div><span class="file-year">CSV</span></div>
+                <p class="small-note" th:if="${arquivos == null or #lists.isEmpty(arquivos)}">Nenhum arquivo foi carregado ainda.</p>
+                <p class="small-note">Arquivos processados pelo serviço de leitura da pasta <code>dados/</code>.</p>
+                <form th:action="@{/recarregar}" action="/recarregar" method="post" class="reload-form"><button class="button button-primary" type="submit">↻ Recarregar arquivos CSV</button></form>
+                <details class="error-details" th:if="${erros != null and !#lists.isEmpty(erros)}"><summary>Ver ocorrências da leitura (<span th:text="${#lists.size(erros)}">0</span>)</summary><ul><li th:each="erro : ${erros}" th:text="${erro}">Ocorrência</li></ul></details>
             </article>
             <article class="panel next-panel">
                 <div class="panel-heading"><div><h3>Próximas etapas</h3><p>Etapas previstas no trabalho</p></div></div>
                 <div class="timeline-item"><span class="timeline-number done">1</span><div><strong>Leitura dos CSVs</strong><small>Modelo e validação dos dados</small></div><span class="mini-status done-text">Base criada</span></div>
-                <div class="timeline-item"><span class="timeline-number">2</span><div><strong>Algoritmos de ordenação</strong><small>Comparações, escritas e trocas</small></div><span class="mini-status">Próxima etapa</span></div>
-                <div class="timeline-item"><span class="timeline-number">3</span><div><strong>Integração Spring Boot</strong><small>Controllers e serviços</small></div></div>
-                <div class="timeline-item"><span class="timeline-number">4</span><div><strong>Dashboard final</strong><small>Visualização dos resultados</small></div></div>
+                <div class="timeline-item"><span class="timeline-number">2</span><div><strong>Algoritmos de ordenação</strong><small>Comparações, substituições e tempo</small></div><span class="mini-status done-text">Integrado</span></div>
+                <div class="timeline-item"><span class="timeline-number">3</span><div><strong>Integração Spring Boot</strong><small>Controllers e serviços disponíveis</small></div></div>
+                <div class="timeline-item"><span class="timeline-number">4</span><div><strong>Dashboard final</strong><small>Explore dados e compare algoritmos</small></div></div>
             </article>
         </section>
-        <footer class="footer">FogoData <span>·</span> APS de Estrutura de Dados <span>·</span> Interface em desenvolvimento</footer>
+        <footer class="footer">FogoData <span>·</span> APS de Estrutura de Dados <span>·</span> Painel integrado</footer>
     </main>
 </div>
 </body>
