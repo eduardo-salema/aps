@@ -20,31 +20,83 @@
     </aside>
 
     <main class="main-content">
-        <header class="topbar"><div><p class="eyebrow">ANÁLISE DE DESEMPENHO</p><h1>Ordenação e resultados</h1><p class="page-description">Compare os algoritmos quando o módulo de ordenação estiver integrado.</p></div><span class="topbar-chip"><span class="status-dot status-pending"></span> Aguardando integração</span></header>
+        <header class="topbar"><div><p class="eyebrow">ANÁLISE DE DESEMPENHO</p><h1>Ordenação e resultados</h1><p class="page-description">Execute algoritmos reais e compare suas métricas sobre os focos carregados.</p></div><span class="topbar-chip"><span class="status-dot"></span> Módulo de ordenação integrado</span></header>
 
-        <section class="welcome-card results-hero"><div class="welcome-copy"><span class="pill pill-light">ESTRUTURA PREPARADA</span><h2>Como os algoritmos<br>se comportam?</h2><p>Esta página foi preparada para receber as métricas calculadas pelo módulo de ordenação, sem inventar resultados antes da implementação.</p></div><div class="welcome-art chart-art" aria-hidden="true"><div class="bar bar-a"></div><div class="bar bar-b"></div><div class="bar bar-c"></div><div class="bar bar-d"></div><div class="bar bar-e"></div><span class="art-caption">COMPARAR · MEDIR · ENTENDER</span></div></section>
+        <section class="welcome-card results-hero"><div class="welcome-copy"><span class="pill pill-light">RESULTADOS REAIS</span><h2>Como os algoritmos<br>se comportam?</h2><p>Selecione o algoritmo, o critério e a amostra para medir comparações, substituições e tempo de execução.</p></div><div class="welcome-art chart-art" aria-hidden="true"><div class="bar bar-a"></div><div class="bar bar-b"></div><div class="bar bar-c"></div><div class="bar bar-d"></div><div class="bar bar-e"></div><span class="art-caption">COMPARAR · MEDIR · ENTENDER</span></div></section>
 
+
+        <section class="panel sorting-panel" aria-labelledby="config-title">
+            <div class="panel-heading"><div><h3 id="config-title">Configurar ordenação</h3><p>Os resultados são calculados pelo backend ao aplicar os filtros.</p></div><span class="panel-icon">⚙</span></div>
+            <form class="sorting-form" method="get" th:action="@{/resultados}" action="/resultados">
+                <label>Algoritmo
+                    <select name="algoritmo" required>
+                        <option value="quick" th:selected="${param.algoritmo == null or param.algoritmo[0] == 'quick'}">Quick Sort</option>
+                        <option value="merge" th:selected="${param.algoritmo != null and param.algoritmo[0] == 'merge'}">Merge Sort</option>
+                        <option value="insertion" th:selected="${param.algoritmo != null and param.algoritmo[0] == 'insertion'}">Insertion Sort</option>
+                        <option value="selection" th:selected="${param.algoritmo != null and param.algoritmo[0] == 'selection'}">Selection Sort</option>
+                        <option value="bubble" th:selected="${param.algoritmo != null and param.algoritmo[0] == 'bubble'}">Bubble Sort</option>
+                    </select>
+                </label>
+                <label>Critério
+                    <select name="criterio">
+                        <option value="data" th:selected="${param.criterio == null or param.criterio[0] == 'data'}">Data</option>
+                        <option value="municipio" th:selected="${param.criterio != null and param.criterio[0] == 'municipio'}">Município</option>
+                        <option value="bioma" th:selected="${param.criterio != null and param.criterio[0] == 'bioma'}">Bioma</option>
+                    </select>
+                </label>
+                <label>Quantidade de registros
+                    <select name="limite">
+                        <option value="100" th:selected="${param.limite != null and param.limite[0] == '100'}">100</option>
+                        <option value="500" th:selected="${param.limite != null and param.limite[0] == '500'}">500</option>
+                        <option value="1000" th:selected="${param.limite != null and param.limite[0] == '1000'}">1.000</option>
+                        <option value="2000" th:selected="${param.limite == null or param.limite[0] == '2000'}">2.000 (máximo da interface)</option>
+                    </select>
+                </label>
+                <button class="button button-primary" type="submit">Executar análise →</button>
+            </form>
+            <p class="small-note">A comparação usa a mesma amostra de entrada para os cinco algoritmos. O tempo pode variar conforme o computador.</p>
+        </section>
         <section class="metric-grid">
-            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-blue">⇄</span><span class="metric-tag">ALGORITMO</span></div><p class="metric-label">Método selecionado</p><p class="metric-value metric-value-text" th:text="${algoritmoSelecionado != null ? algoritmoSelecionado : 'Não definido'}">Não definido</p><p class="metric-foot">Será informado pelo módulo de ordenação</p></article>
-            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-purple">≋</span><span class="metric-tag">OPERAÇÕES</span></div><p class="metric-label">Total de operações</p><p class="metric-value" th:text="${totalOperacoes != null ? totalOperacoes : '—'}">—</p><p class="metric-foot">Conforme a métrica definida no projeto</p></article>
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-blue">⇄</span><span class="metric-tag">ALGORITMO</span></div><p class="metric-label">Método selecionado</p><p class="metric-value metric-value-text" th:text="${algoritmoSelecionado != null ? algoritmoSelecionado : 'Não definido'}">Não definido</p><p class="metric-foot">Algoritmo executado na amostra selecionada</p></article>
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-purple">≋</span><span class="metric-tag">OPERAÇÕES</span></div><p class="metric-label">Total de operações</p><p class="metric-value" th:text="${totalOperacoes != null ? totalOperacoes : '—'}">—</p><p class="metric-foot">Comparações + substituições</p></article>
             <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-green">◷</span><span class="metric-tag">TEMPO</span></div><p class="metric-label">Tempo de execução</p><p class="metric-value"><span th:text="${tempoExecucaoMs != null ? tempoExecucaoMs : '—'}">—</span><small th:if="${tempoExecucaoMs != null}"> ms</small></p><p class="metric-foot">Medido durante a ordenação</p></article>
             <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-orange">⇅</span><span class="metric-tag">DADOS</span></div><p class="metric-label">Registros ordenados</p><p class="metric-value" th:text="${totalOrdenado != null ? totalOrdenado : '—'}">—</p><p class="metric-foot">Quantidade de focos no teste</p></article>
         </section>
 
         <section class="content-grid results-grid">
-            <article class="panel panel-large"><div class="panel-heading"><div><h3>Comparativo de algoritmos</h3><p>Área reservada para os resultados reais</p></div><span class="panel-icon">▥</span></div>
-                <div class="chart-placeholder"><div class="chart-grid-lines"><span></span><span></span><span></span><span></span></div><div class="chart-empty"><span class="chart-empty-icon">▥</span><strong>Gráfico será exibido após a integração</strong><p>Os dados da Pessoa 2 alimentarão esta visualização.</p></div><div class="chart-labels"><span>Bubble</span><span>Selection</span><span>Insertion</span><span>Merge</span><span>Quick</span></div></div>
-                <p class="small-note">Os nomes representam os algoritmos previstos nos arquivos do projeto. Nenhuma comparação de desempenho foi preenchida artificialmente.</p>
+            <article class="panel panel-large">
+                <div class="panel-heading"><div><h3>Comparativo de algoritmos</h3><p>Métricas medidas pelo serviço de ordenação</p></div><span class="panel-icon">▥</span></div>
+                <div class="table-scroll" th:if="${comparativoAlgoritmos != null and !comparativoAlgoritmos.isEmpty()}">
+                    <table class="data-table comparison-table">
+                        <thead><tr><th>Algoritmo</th><th>Comparações</th><th>Substituições</th><th>Tempo (ms)</th><th>Registros</th></tr></thead>
+                        <tbody><tr th:each="entrada : ${comparativoAlgoritmos}">
+                            <td><strong th:text="${entrada.key == 'bubble' ? 'Bubble Sort' : (entrada.key == 'selection' ? 'Selection Sort' : (entrada.key == 'insertion' ? 'Insertion Sort' : (entrada.key == 'merge' ? 'Merge Sort' : 'Quick Sort')))}">Algoritmo</strong></td>
+                            <td th:text="${#numbers.formatInteger(entrada.value.comparacoes, 1, 'POINT')}">0</td>
+                            <td th:text="${#numbers.formatInteger(entrada.value.substituicoes, 1, 'POINT')}">0</td>
+                            <td th:text="${#numbers.formatDecimal(entrada.value.tempoMs, 1, 3)}">0</td>
+                            <td th:text="${entrada.value.dadosOrdenados.size()}">0</td>
+                        </tr></tbody>
+                    </table>
+                </div>
+                <div class="empty-state" th:if="${comparativoAlgoritmos == null or comparativoAlgoritmos.isEmpty()}"><strong>Sem resultados disponíveis</strong><p>Carregue os CSVs na página inicial e execute a análise.</p></div>
+                <p class="small-note">Substituições são gravações contabilizadas pelos algoritmos; não representam necessariamente trocas entre dois elementos.</p>
             </article>
             <article class="panel"><div class="panel-heading"><div><h3>Métricas consideradas</h3><p>Indicadores para comparação</p></div><span class="panel-icon">◎</span></div>
                 <div class="metric-detail"><span class="detail-symbol icon-blue">↔</span><div><strong>Comparações</strong><p>Quantas vezes elementos são comparados.</p></div></div>
                 <div class="metric-detail"><span class="detail-symbol icon-purple">✎</span><div><strong>Escritas</strong><p>Quantas atribuições ou gravações são contabilizadas.</p></div></div>
-                <div class="metric-detail"><span class="detail-symbol icon-orange">⇄</span><div><strong>Trocas</strong><p>Quantas permutas acontecem durante a ordenação.</p></div></div>
+                <div class="metric-detail"><span class="detail-symbol icon-orange">⇄</span><div><strong>Substituições</strong><p>Quantidade de gravações contabilizadas na ordenação.</p></div></div>
                 <div class="metric-detail"><span class="detail-symbol icon-green">◷</span><div><strong>Tempo de execução</strong><p>Duração do processamento, em milissegundos.</p></div></div>
             </article>
         </section>
-        <section class="notice-card"><span class="notice-icon">i</span><div><strong>Importante para a integração</strong><p>Os nomes dos atributos usados nesta página são sugestões de contrato entre o Controller e o Thymeleaf. A Pessoa 3 deve alinhá-los com as classes e os métodos finais do módulo de ordenação.</p></div></section>
-        <footer class="footer">FogoData <span>·</span> APS de Estrutura de Dados <span>·</span> Interface em desenvolvimento</footer>
+        <section class="panel data-panel" th:if="${dadosOrdenados != null and !dadosOrdenados.isEmpty()}">
+            <div class="panel-heading"><div><h3>Prévia dos dados ordenados</h3><p>Primeiros 30 registros retornados pelo algoritmo escolhido</p></div><span class="result-count" th:text="${totalOrdenado + ' registros ordenados'}">0 registros</span></div>
+            <div class="table-scroll"><table class="data-table"><thead><tr><th>Data e hora</th><th>Município</th><th>Bioma</th><th>Latitude</th><th>Longitude</th></tr></thead>
+                <tbody><tr th:each="foco, stat : ${dadosOrdenados}" th:if="${stat.index < 30}">
+                    <td th:text="${#temporals.format(foco.dataHora, 'dd/MM/yyyy HH:mm')}">Data</td><td th:text="${foco.municipio}">Município</td><td th:text="${foco.bioma}">Bioma</td><td th:text="${#numbers.formatDecimal(foco.latitude, 1, 4)}">0</td><td th:text="${#numbers.formatDecimal(foco.longitude, 1, 4)}">0</td>
+                </tr></tbody></table></div>
+        </section>
+        <section class="notice-card"><span class="notice-icon">i</span><div><strong>Como interpretar</strong><p>As medições são feitas pelo backend. O tempo em milissegundos pode variar entre execuções, e a quantidade de operações depende da implementação de cada algoritmo.</p></div></section>
+        <footer class="footer">FogoData <span>·</span> APS de Estrutura de Dados <span>·</span> Painel integrado</footer>
     </main>
 </div>
 </body>
