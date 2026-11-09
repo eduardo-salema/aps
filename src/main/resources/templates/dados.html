@@ -25,27 +25,59 @@
         <section class="metric-grid metric-grid-three">
             <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-blue">▤</span><span class="metric-tag">BASE</span></div><p class="metric-label">Focos válidos</p><p class="metric-value" th:text="${totalFocos != null ? totalFocos : '—'}">—</p><p class="metric-foot">Objetos FocoIncendio carregados</p></article>
             <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-orange">!</span><span class="metric-tag">QUALIDADE</span></div><p class="metric-label">Linhas inválidas</p><p class="metric-value" th:text="${linhasInvalidas != null ? linhasInvalidas : '—'}">—</p><p class="metric-foot">Linhas ignoradas por erro de validação</p></article>
-            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-purple">▧</span><span class="metric-tag">ORIGEM</span></div><p class="metric-label">Arquivos processados</p><p class="metric-value" th:text="${arquivos != null ? #lists.size(arquivos) : '2'}">2</p><p class="metric-foot">ES 2023.csv e ES 2024.csv</p></article>
+            <article class="metric-card"><div class="metric-top"><span class="metric-icon icon-purple">▧</span><span class="metric-tag">ORIGEM</span></div><p class="metric-label">Arquivos processados</p><p class="metric-value" th:text="${arquivos != null ? #lists.size(arquivos) : 0}">0</p><p class="metric-foot">Arquivos efetivamente processados</p></article>
         </section>
 
         <section class="panel data-panel">
-            <div class="panel-heading panel-heading-wrap"><div><h3>Registros de focos de incêndio</h3><p>Campos disponíveis no modelo FocoIncendio</p></div><span class="result-count" th:if="${focos != null}" th:text="${#lists.size(focos)} + ' registros'">Registros</span><span class="result-count" th:unless="${focos != null}">Prévia da estrutura</span></div>
+            <div class="panel-heading panel-heading-wrap"><div><h3>Registros de focos de incêndio</h3><p>Campos disponíveis no modelo FocoIncendio</p></div><span class="result-count" th:text="${totalFocos != null ? totalFocos + ' registros carregados' : 'Sem dados'}">Registros</span></div>
+            <div class="filter-toolbar" aria-label="Filtros de registros">
+                <label>Buscar município <input id="buscaMunicipio" type="search" placeholder="Ex.: Vitória" autocomplete="off"></label>
+                <label>Ano <select id="filtroAno"><option value="">Todos os anos</option><option th:each="ano : ${anos}" th:value="${ano}" th:text="${ano}">2023</option></select></label>
+                <label>Bioma <select id="filtroBioma"><option value="">Todos os biomas</option><option th:each="bioma : ${biomas}" th:value="${bioma}" th:text="${bioma}">Bioma</option></select></label>
+                <button type="button" id="limparFiltros" class="button button-secondary">Limpar filtros</button>
+            </div>
             <div class="table-scroll">
                 <table class="data-table">
                     <thead><tr><th>Data e hora</th><th>Município</th><th>Estado</th><th>Bioma</th><th>Latitude</th><th>Longitude</th><th>Satélite</th></tr></thead>
                     <tbody>
-                    <tr th:each="foco, stat : ${focos}" th:if="${stat.index < 50}">
+                    <tr class="foco-row" th:each="foco, stat : ${focos}" th:if="${stat.index < 100}" th:attr="data-municipio=${foco.municipio},data-ano=${foco.ano},data-bioma=${foco.bioma}">
                         <td th:text="${#temporals.format(foco.dataHora, 'dd/MM/yyyy HH:mm')}">03/01/2023 16:13</td><td th:text="${foco.municipio}">DOMINGOS MARTINS</td><td th:text="${foco.estado}">ESPÍRITO SANTO</td><td><span class="biome-pill" th:text="${foco.bioma}">Mata Atlântica</span></td><td th:text="${#numbers.formatDecimal(foco.latitude, 1, 4)}">-20.3760</td><td th:text="${#numbers.formatDecimal(foco.longitude, 1, 4)}">-40.6945</td><td th:text="${foco.satelite}">—</td>
                     </tr>
-                    <tr th:if="${focos == null or #lists.isEmpty(focos)}"><td colspan="7" class="empty-state"><span class="empty-icon">▤</span><strong>Aguardando dados do Controller</strong><p>Esta tabela será preenchida quando o Controller enviar a lista de focos para a página.</p><small>Exemplo baseado no CSV: 03/01/2023 · Domingos Martins · Mata Atlântica</small></td></tr>
+                    <tr th:if="${focos == null or #lists.isEmpty(focos)}"><td colspan="7" class="empty-state"><span class="empty-icon">▤</span><strong>Nenhum registro carregado</strong><p>Confira os arquivos CSV e recarregue os dados na visão geral.</p></td></tr>
                     </tbody>
                 </table>
             </div>
-            <div class="table-foot"><span>Exibindo até 50 registros para manter a página leve.</span><span>Os dados completos permanecem no backend.</span></div>
+            <div class="table-foot"><span id="contagemVisivel" aria-live="polite">Exibindo até 100 registros.</span><span>Os filtros atuam sobre os primeiros 100 registros; a base completa permanece no backend.</span></div>
         </section>
-        <section class="notice-card"><span class="notice-icon">i</span><div><strong>Sobre os dados</strong><p>O leitor atual exige data/hora, latitude, longitude, município e bioma. Campos como satélite, estado e país são tratados pelo modelo quando disponíveis no CSV.</p></div></section>
-        <footer class="footer">FogoData <span>·</span> APS de Estrutura de Dados <span>·</span> Interface em desenvolvimento</footer>
+        <section class="notice-card"><span class="notice-icon">i</span><div><strong>Sobre os dados</strong><p>Os filtros desta tela são locais e não alteram a base. Para análises ordenadas, use a página de resultados.</p></div></section>
+        <footer class="footer">FogoData <span>·</span> APS de Estrutura de Dados <span>·</span> Painel integrado</footer>
     </main>
 </div>
+<script>
+    (function () {
+        const busca = document.getElementById('buscaMunicipio');
+        const ano = document.getElementById('filtroAno');
+        const bioma = document.getElementById('filtroBioma');
+        const linhas = [...document.querySelectorAll('.foco-row')];
+        const contagem = document.getElementById('contagemVisivel');
+        const normalizar = valor => (valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        function filtrar() {
+            let visiveis = 0;
+            linhas.forEach(linha => {
+                const mostrar = normalizar(linha.dataset.municipio).includes(normalizar(busca.value))
+                    && (!ano.value || linha.dataset.ano === ano.value)
+                    && (!bioma.value || linha.dataset.bioma === bioma.value);
+                linha.hidden = !mostrar;
+                if (mostrar) visiveis++;
+            });
+            contagem.textContent = `${visiveis} de ${linhas.length} registros da prévia visíveis.`;
+        }
+        [busca, ano, bioma].forEach(el => el.addEventListener('input', filtrar));
+        document.getElementById('limparFiltros').addEventListener('click', () => {
+            busca.value = ''; ano.value = ''; bioma.value = ''; filtrar();
+        });
+        filtrar();
+    })();
+</script>
 </body>
 </html>
