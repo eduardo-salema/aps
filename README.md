@@ -172,6 +172,8 @@ Para validar o sistema, recomenda-se:
 
 - Kauã da Silva Andrade | H403DG8
 - Ricardo De Sousa Matos Junior | R871CJ1
+- Eduardo Leite Salema| R660CC3
+Henrique Lucca Costa | H77JCB3
 ---
 
 **Desenvolvido para fins acadêmicos — UNIP.**
