@@ -364,7 +364,7 @@ a{
 }
 
 .muted-note{
-    font-size:10px;
+    font-size:11px;
     color:#98a1b0;
 }
 
@@ -404,7 +404,7 @@ a{
     border-radius:10px;
     display:grid;
     place-items:center;
-    font-size:16px;
+    font-size:30px;
     font-weight:700;
 }
 
@@ -429,7 +429,7 @@ a{
 }
 
 .metric-tag{
-    font-size:8px;
+    font-size:10px;
     font-weight:700;
     letter-spacing:1px;
     color:#a0a9b8;
@@ -466,15 +466,12 @@ a{
 }
 
 .metric-foot{
-    font-size:9px;
+    font-size:10px;
     color:#9ba4b2;
     margin:8px 0 0;
 }
 
 .content-grid{
-    display:grid;
-    grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
-    gap:16px;
     margin-bottom:22px;
 }
 
@@ -499,7 +496,7 @@ a{
 }
 
 .panel-heading p{
-    font-size:10px;
+    font-size:12px;
     color:#8b95a5;
     margin:4px 0 0;
 }
@@ -548,11 +545,11 @@ a{
 }
 
 .file-info strong{
-    font-size:11px;
+    font-size:12px;
 }
 
 .file-info small{
-    font-size:9px;
+    font-size:11px;
     color:#929cac;
 }
 
@@ -567,7 +564,7 @@ a{
 }
 
 .small-note{
-    font-size:9px;
+    font-size:12px;
     color:#929cac;
     line-height:1.7;
     margin:13px 0 0;
@@ -644,7 +641,7 @@ a{
 .footer{
     padding:19px 0 4px;
     color:#9aa3b1;
-    font-size:9px;
+    font-size:12px;
 }
 
 .footer span{
@@ -657,7 +654,7 @@ a{
 }
 
 .result-count{
-    font-size:9px;
+    font-size:11px;
     font-weight:700;
     background:#eef3ff;
     color:#4a6dbe;
@@ -706,7 +703,7 @@ a{
 .data-table td{
     padding:13px 14px;
     border-bottom:1px solid #f0f2f6;
-    font-size:10px;
+    font-size:12px;
     color:#596579;
 }
 
@@ -729,7 +726,7 @@ a{
     gap:12px;
     padding:13px 21px;
     color:#969faf;
-    font-size:9px;
+    font-size:12px;
 }
 
 .empty-state{
@@ -797,7 +794,7 @@ a{
 }
 
 .notice-card p{
-    font-size:10px;
+    font-size:11px;
     line-height:1.7;
     color:#63799e;
     margin:4px 0 0;
@@ -913,11 +910,11 @@ a{
 }
 
 .metric-detail strong{
-    font-size:10px;
+    font-size:12px;
 }
 
 .metric-detail p{
-    font-size:9px;
+    font-size:11px;
     color:#8b95a5;
     line-height:1.6;
     margin:4px 0 0;
@@ -935,9 +932,6 @@ a{
     }
     .metric-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-    .content-grid, .results-grid{
-        grid-template-columns:1fr;
     }
     .welcome-art{
         right:-45px;opacity:.55;

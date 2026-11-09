@@ -60,13 +60,6 @@
                 <form th:action="@{/recarregar}" action="/recarregar" method="post" class="reload-form"><button class="button button-primary" type="submit">↻ Recarregar arquivos CSV</button></form>
                 <details class="error-details" th:if="${erros != null and !#lists.isEmpty(erros)}"><summary>Ver ocorrências da leitura (<span th:text="${#lists.size(erros)}">0</span>)</summary><ul><li th:each="erro : ${erros}" th:text="${erro}">Ocorrência</li></ul></details>
             </article>
-            <article class="panel next-panel">
-                <div class="panel-heading"><div><h3>Próximas etapas</h3><p>Etapas previstas no trabalho</p></div></div>
-                <div class="timeline-item"><span class="timeline-number done">1</span><div><strong>Leitura dos CSVs</strong><small>Modelo e validação dos dados</small></div><span class="mini-status done-text">Base criada</span></div>
-                <div class="timeline-item"><span class="timeline-number">2</span><div><strong>Algoritmos de ordenação</strong><small>Comparações, substituições e tempo</small></div><span class="mini-status done-text">Integrado</span></div>
-                <div class="timeline-item"><span class="timeline-number">3</span><div><strong>Integração Spring Boot</strong><small>Controllers e serviços disponíveis</small></div></div>
-                <div class="timeline-item"><span class="timeline-number">4</span><div><strong>Dashboard final</strong><small>Explore dados e compare algoritmos</small></div></div>
-            </article>
         </section>
         <footer class="footer">FogoData <span>·</span> APS de Estrutura de Dados <span>·</span> Painel integrado</footer>
     </main>
